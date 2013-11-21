@@ -18,5 +18,5 @@ stacktrace.log
 .classpath
 .idea/
 .project
-CommunityInventory.iml
+*.iml
 
