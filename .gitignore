@@ -1,4 +1,9 @@
+#Intellij
 *.iws
+*.iml
+.idea/
+
+#Grails
 *Db.properties
 *Db.script
 .settings
@@ -8,7 +13,6 @@ stacktrace.log
 /*.log
 /*DB.*
 /cobertura.ser
-.DS_Store
 /target/
 /out/
 /web-app/plugins
@@ -16,7 +20,10 @@ stacktrace.log
 /.link_to_grails_plugins/
 /target-eclipse/
 .classpath
-.idea/
 .project
-*.iml
+grails-app/il8n/shiro.properties
+
+#Mac
+.DS_Store
+
 
