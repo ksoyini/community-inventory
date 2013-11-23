@@ -1,8 +1,9 @@
+<%@ page import="grails.util.Environment" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta name="layout" content="main"/>
-		<title>Welcome to Grails</title>
+		<title>Welcome to Community Inventory</title>
 		<style type="text/css" media="screen">
 			#status {
 				background-color: #eee;
@@ -11,9 +12,9 @@
 				padding: 1em;
 				width: 12em;
 				float: left;
-				-moz-box-shadow: 0px 0px 1.25em #ccc;
-				-webkit-box-shadow: 0px 0px 1.25em #ccc;
-				box-shadow: 0px 0px 1.25em #ccc;
+				-moz-box-shadow: 0 0 1.25em #ccc;
+				-webkit-box-shadow: 0 0 1.25em #ccc;
+				box-shadow: 0 0 1.25em #ccc;
 				-moz-border-radius: 0.6em;
 				-webkit-border-radius: 0.6em;
 				border-radius: 0.6em;
@@ -65,7 +66,7 @@
 				margin: 0.25em 0;
 			}
 
-			@media screen and (max-width: 480px) {
+			@media screen and (max-width: 480) {
 				#status {
 					display: none;
 				}
@@ -89,24 +90,23 @@
 				<li>Grails version: <g:meta name="app.grails.version"/></li>
 				<li>Groovy version: ${GroovySystem.getVersion()}</li>
 				<li>JVM version: ${System.getProperty('java.version')}</li>
-				<li>Reloading active: ${grails.util.Environment.reloadingAgentEnabled}</li>
+				<li>Reloading active: ${Environment.reloadingAgentEnabled}</li>
 				<li>Controllers: ${grailsApplication.controllerClasses.size()}</li>
 				<li>Domains: ${grailsApplication.domainClasses.size()}</li>
 				<li>Services: ${grailsApplication.serviceClasses.size()}</li>
 				<li>Tag Libraries: ${grailsApplication.tagLibClasses.size()}</li>
 			</ul>
-			<h1>Installed Plugins</h1>
-			<ul>
-				<g:each var="plugin" in="${applicationContext.getBean('pluginManager').allPlugins}">
-					<li>${plugin.name} - ${plugin.version}</li>
-				</g:each>
-			</ul>
+			%{--<h1>Installed Plugins</h1>--}%
+			%{--<ul>--}%
+				%{--<g:each var="plugin" in="${applicationContext.getBean('pluginManager').allPlugins}">--}%
+					%{--<li>${plugin.name} - ${plugin.version}</li>--}%
+				%{--</g:each>--}%
+			%{--</ul>--}%
 		</div>
 		<div id="page-body" role="main">
-			<h1>Welcome to Grails</h1>
-			<p>Congratulations, you have successfully started your first Grails application! At the moment
-			   this is the default page, feel free to modify it to either redirect to a controller or display whatever
-			   content you may choose. Below is a list of controllers that are currently deployed in this application,
+			<h1>Welcome to Community Inventory</h1>
+			<p>Here you can keep track of your pantry items, and see other items that user's in your community have. <br/>
+            Below is a list of controllers that are currently deployed in this application,
 			   click on each to execute its default action:</p>
 
 			<div id="controller-list" role="navigation">
@@ -117,6 +117,10 @@
 					</g:each>
 				</ul>
 			</div>
+
+            <div id=logout>
+                <g:link controller="auth" action="signOut">Logout</g:link>
+            </div>
 		</div>
 	</body>
 </html>
