@@ -4,7 +4,7 @@ package scott.kellie
 class FamilyMember {
 
     Family family
-    //User/Member
+    User user
 
     static constraints = {
     }
