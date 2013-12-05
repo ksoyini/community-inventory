@@ -1,6 +1,5 @@
 package scott.kellie
 
-//JurisdictionCode
 class Community {
 
     String name
