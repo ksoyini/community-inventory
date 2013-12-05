@@ -17,6 +17,7 @@ class SecurityServiceIntegrationSpecification extends IntegrationSpec {
     void before() {
 //        if(!SecurityUtils.securityManager) {
             SecurityUtils.securityManager = grailsApplication.mainContext.getBean('shiroSecurityManager')
+            SecurityUtils.securityManager = shiroSecurityManager
 //        }
     }
 
