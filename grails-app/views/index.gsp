@@ -117,10 +117,6 @@
 					</g:each>
 				</ul>
 			</div>
-
-            <div id=logout>
-                <g:link controller="auth" action="signOut">Logout</g:link>
-            </div>
 		</div>
 	</body>
 </html>

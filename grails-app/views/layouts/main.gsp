@@ -19,7 +19,20 @@
 	</head>
 	<body>
 		<div id="grailsLogo" role="banner"><a href="http://grails.org"><img src="${resource(dir: 'images', file: 'grails_logo.png')}" alt="Grails"/></a></div>
+        <div id="currentUser">
+        <shiro:isLoggedIn>
+
+        </shiro:isLoggedIn>
+        </div>
+        <shiro:isNotLoggedIn>
+            <g:link controller="auth" action="login">Login</g:link>
+        </shiro:isNotLoggedIn>
 		<g:layoutBody/>
+        <shiro:isLoggedIn>
+            <div id=logout>
+                <g:link controller="auth" action="signOut">Logout</g:link>
+            </div>
+        </shiro:isLoggedIn>
 		<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
 		<g:javascript library="application"/>
