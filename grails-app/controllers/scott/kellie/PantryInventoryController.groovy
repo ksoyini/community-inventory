@@ -1,6 +1,8 @@
 package scott.kellie
 
 import communityinventory.PantryInventoryService
+import grails.converters.JSON
+import grails.converters.XML
 import org.springframework.dao.DataIntegrityViolationException
 
 class PantryInventoryController {
@@ -13,9 +15,25 @@ class PantryInventoryController {
         redirect(action: "list", params: params)
     }
 
-    def list(Integer max) {
+    def commonList() {
         List<PantryInventory> pantry = pantryInventoryService.listPantryInventoryForMyFamily()
         [pantryInventoryInstanceList: pantry, pantryInventoryInstanceTotal: pantry.size()]
+    }
+
+
+    def list(Integer max) {
+          commonList()
+    }
+    def apiList() {
+        Map listModel = commonList()
+        withFormat {
+            json {
+                render listModel.pantryInventoryInstanceList as JSON
+            }
+            xml {
+                render listModel.pantryInventoryInstanceList as XML
+            }
+        }
     }
 
     def create() {

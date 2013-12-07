@@ -6,6 +6,16 @@ class UrlMappings {
 				// apply constraints here
 			}
 		}
+        "/api/$controller"(parseRequest: true){
+			action = [GET: "apiList"]
+		}
+         "/api/$controller/$id"(parseRequest: true){
+			action = [GET: "show"]
+             constraints {
+                 // apply constraints here
+                 //id matches:/\d+
+             }
+		}
 
 		"/"(view:"/index")
 		"500"(view:'/error')

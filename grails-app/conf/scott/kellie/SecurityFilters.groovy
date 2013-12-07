@@ -6,14 +6,21 @@ package scott.kellie
  */
 class SecurityFilters {
     def filters = {
-        all(uri: "/**") {
+        api(uri: "/api/**/**") {
+            before = {
+                request.api = true
+                return true
+            }
+        }
+        nonApi(uri: "/**") {
             before = {
                 // Ignore direct views (e.g. the default main index page).
-                if (!controllerName) return true
+                if (!controllerName || request.api) return true
 
                 // Access control by convention.
                 accessControl()
             }
         }
+
     }
 }
