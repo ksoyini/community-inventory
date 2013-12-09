@@ -1,4 +1,6 @@
 import org.apache.shiro.crypto.hash.Sha256Hash
+import scott.kellie.ItemCategory
+import scott.kellie.PantryItem
 import scott.kellie.Role
 import scott.kellie.User
 
@@ -8,6 +10,7 @@ class BootStrap {
         Role head = Role.findOrCreateByName("HEAD_OF_HOUSEHOLD")
         Role member = Role.findOrCreateByName("MEMBER_OF_HOUSEHOLD")
 
+        // add sample set of users
         if(!User.count()) {
             //TODO: add salt
             User smithScott  = new User(username: 'smithscott', passwordHash: new Sha256Hash('smithscott').toHex(), roles: [head]).save()
@@ -28,6 +31,16 @@ class BootStrap {
             }
 
         }
+
+        //add sample set of pantry items
+        if(!PantryItem.count()) {
+            PantryItem apples = new PantryItem(name: 'apples', itemCategory: ItemCategory.PRODUCE).save()
+            PantryItem yogurt = new PantryItem(name: 'yogurt', itemCategory: ItemCategory.DAIRY)
+            PantryItem bleach = new PantryItem(name: 'bleach', itemCategory: ItemCategory.CLEANING)
+
+        }
+
+
 
     }
     def destroy = {
