@@ -1,6 +1,5 @@
 package scott.kellie
 
-import communityinventory.PantryInventoryService
 import grails.converters.JSON
 import grails.converters.XML
 import org.springframework.dao.DataIntegrityViolationException

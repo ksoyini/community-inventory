@@ -1,4 +1,4 @@
-import communityinventory.SecurityService
+import scott.kellie.SecurityService
 import grails.plugin.spock.IntegrationSpec
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.authc.UsernamePasswordToken

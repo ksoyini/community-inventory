@@ -1,4 +1,4 @@
-package communityinventory
+package scott.kellie
 
 class CommonDisplayTagLib {
     static namespace = "pantry"

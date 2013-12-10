@@ -1,4 +1,4 @@
-package communityinventory
+package scott.kellie
 
 import scott.kellie.Family
 import scott.kellie.FamilyMember
@@ -11,6 +11,7 @@ class PantryInventoryService {
     //TODO: test
     List<PantryInventory> listPantryInventoryForMyFamily() {
         User currentUser = securityService.currentUser
+        log.debug('currentUser: ' + currentUser)
         Family currentUserFamily = FamilyMember.createCriteria().get {
             eq 'user', currentUser
             projections {

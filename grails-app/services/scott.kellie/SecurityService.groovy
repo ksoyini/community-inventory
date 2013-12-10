@@ -1,4 +1,4 @@
-package communityinventory
+package scott.kellie
 
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.authc.UsernamePasswordToken
@@ -22,9 +22,11 @@ class SecurityService {
     boolean apiLogin(String username, String password) {
         UsernamePasswordToken token = new UsernamePasswordToken(username: username, password: password)
         try {
+            log.debug('api authentication for username' + username)
             SecurityUtils.subject.login(token)
             return true
         } catch (AuthenticationException){
+            log.debug('api authentication failed')
             return false
         }
     }

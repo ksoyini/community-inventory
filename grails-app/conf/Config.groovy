@@ -13,7 +13,7 @@
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
-grails.mime.use.accept.header = false
+grails.mime.use.accept.header = true //so THAT IN CONTROLLER ACTIONS CAN RESPOND W/ EITHER XML OR JSON BASED ON WHAT CLIENT SENDS IN ON REQUEST HEADER
 grails.mime.types = [
     all:           '*/*',
     atom:          'application/atom+xml',
@@ -90,5 +90,6 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 
-//    info 'console':['grails.app']
+    info 'console':['grails.app']
+    debug 'console':['scott.kellie']
 }
