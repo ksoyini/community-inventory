@@ -90,6 +90,6 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 
-    info 'console':['grails.app']
-    debug 'console':['scott.kellie']
+    info 'console':['grails.app.taglib.org']
+    debug 'console':['grails.app']
 }
