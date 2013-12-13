@@ -1,5 +1,9 @@
 import org.apache.shiro.crypto.hash.Sha256Hash
+import scott.kellie.Community
+import scott.kellie.Family
+import scott.kellie.FamilyMember
 import scott.kellie.ItemCategory
+import scott.kellie.PantryInventory
 import scott.kellie.PantryItem
 import scott.kellie.Role
 import scott.kellie.User
@@ -11,7 +15,7 @@ class BootStrap {
         Role member = Role.findOrCreateByName("MEMBER_OF_HOUSEHOLD")
 
         // add sample set of users
-        if(!User.count()) {
+//        if(!User.count()) {
             //TODO: add salt
             User smithScott  = new User(username: 'smithscott', passwordHash: new Sha256Hash('smithscott').toHex(), roles: [head]).save()
 
@@ -27,20 +31,44 @@ class BootStrap {
                 //can access their own pantry
                 u.addToPermissions('pantryInventory:index')
                 u.addToPermissions('pantryInventory:list')
+                u.addToPermissions('pantryInventory:apiList')
                 u.save()
             }
 
-        }
+//        }
 
         //add sample set of pantry items
-        if(!PantryItem.count()) {
+//        if(!PantryItem.count()) {
             PantryItem apples = new PantryItem(name: 'apples', itemCategory: ItemCategory.PRODUCE).save()
-            PantryItem yogurt = new PantryItem(name: 'yogurt', itemCategory: ItemCategory.DAIRY)
-            PantryItem bleach = new PantryItem(name: 'bleach', itemCategory: ItemCategory.CLEANING)
+            PantryItem yogurt = new PantryItem(name: 'yogurt', itemCategory: ItemCategory.DAIRY).save()
+            PantryItem bleach = new PantryItem(name: 'bleach', itemCategory: ItemCategory.CLEANING).save()
+            PantryItem cashews = new PantryItem(name: 'cashews', itemCategory: ItemCategory.SNACKS).save()
+//        }
 
-        }
+       //add sample community
+        Community midlo = new Community(name: 'midlo').save()
+        Community sunrise = new Community(name: 'sunrise').save()
 
+        //add sample familys
+        Family scott = new Family(familyName: 'scott', community: midlo).save()
+        Family rob = new Family(familyName: 'robinson', community: midlo).save()
+        Family smith = new Family(familyName: 'smith', community: sunrise).save()
 
+        //add sample FamilyMembers
+        FamilyMember smithscott = new FamilyMember(family: scott, user: smithScott).save()
+        FamilyMember robi = new FamilyMember(family: rob, user: robinson).save()
+        FamilyMember gelica = new FamilyMember(family: rob, user: geli).save()
+        FamilyMember barry = new FamilyMember(family: smith, user: simo).save()
+        FamilyMember quito = new FamilyMember(family: smith, user: tar).save()
+        FamilyMember aguy = new FamilyMember(family: smith, user: ang).save()
+
+        //add sample pantrys
+        PantryInventory scottPantryApples = new PantryInventory(pantryItem: apples, quantity: 5, family: scott).save()
+        PantryInventory scottPantryYogurt = new PantryInventory(pantryItem: yogurt, quantity: 4, family: scott).save()
+        PantryInventory robinsonPantryYogurt = new PantryInventory(pantryItem: yogurt, quantity: 2, family: rob).save()
+        PantryInventory robinsonPantryBleach = new PantryInventory(pantryItem: bleach, quantity: 1, family: rob).save()
+        PantryInventory smithPantryYogurt = new PantryInventory(pantryItem: yogurt, quantity: 3, family: smith).save()
+        PantryInventory smithPantryCashews = new PantryInventory(pantryItem: cashews, quantity: 2, family: smith).save()
 
     }
     def destroy = {
