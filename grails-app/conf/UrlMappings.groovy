@@ -7,7 +7,7 @@ class UrlMappings {
 			}
 		}
         "/api/$controller"(parseRequest: true){
-			action = [GET: "apiList"]
+			action = [GET: "list"]
 		}
          "/api/$controller/$id"(parseRequest: true){
 			action = [GET: "show"]

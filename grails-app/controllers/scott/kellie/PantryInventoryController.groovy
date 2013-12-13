@@ -14,26 +14,21 @@ class PantryInventoryController {
         redirect(action: "list", params: params)
     }
 
-    def commonList() {
+    def list() {
         List<PantryInventory> pantry = pantryInventoryService.listPantryInventoryForMyFamily()
-        [pantryInventoryInstanceList: pantry, pantryInventoryInstanceTotal: pantry.size()]
-    }
-
-
-    def list(Integer max) {
-          commonList()
-    }
-    def apiList() {
-        Map listModel = commonList()
         withFormat {
+            html{
+                [pantryInventoryInstanceList: pantry, pantryInventoryInstanceTotal: pantry.size()]
+            }
             json {
-                render listModel.pantryInventoryInstanceList as JSON
+                render pantry as JSON
             }
             xml {
-                render listModel.pantryInventoryInstanceList as XML
+                render pantry as XML
             }
         }
     }
+
 
     def create() {
         [pantryInventoryInstance: new PantryInventory(params)]
