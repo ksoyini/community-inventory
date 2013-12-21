@@ -1,8 +1,8 @@
 package scott.kellie
 
 import org.apache.shiro.SecurityUtils
+import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.UsernamePasswordToken
-import scott.kellie.User
 
 class SecurityService {
 
@@ -22,11 +22,11 @@ class SecurityService {
     boolean apiLogin(String username, String password) {
         UsernamePasswordToken token = new UsernamePasswordToken(username: username, password: password)
         try {
-            log.debug('api authentication for username' + username)
+            log.debug("api authentication for username: $username")
             SecurityUtils.subject.login(token)
             return true
-        } catch (AuthenticationException){
-            log.debug('api authentication failed')
+        } catch (AuthenticationException ae){
+            log.debug("api authentication failed: $ae.message")
             return false
         }
     }
