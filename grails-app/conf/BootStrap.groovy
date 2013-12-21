@@ -50,9 +50,9 @@ class BootStrap {
         Community sunrise = new Community(name: 'sunrise').save()
 
         //add sample familys
-        Family scott = new Family(familyName: 'scott', community: midlo).save()
-        Family rob = new Family(familyName: 'robinson', community: midlo).save()
-        Family smith = new Family(familyName: 'smith', community: sunrise).save()
+        Family scott = new Family(familyName: 'scott', address: '305 Main St', community: midlo).save()
+        Family rob = new Family(familyName: 'robinson', address: '1482 Main St', community: midlo).save()
+        Family smith = new Family(familyName: 'smith', address: '9608 Main St', community: sunrise).save()
 
         //add sample FamilyMembers
         FamilyMember smithscott = new FamilyMember(family: scott, user: smithScott).save()
