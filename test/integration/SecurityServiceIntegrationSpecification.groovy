@@ -1,3 +1,10 @@
+import org.apache.shiro.UnavailableSecurityManagerException
+import org.apache.shiro.subject.Subject
+import org.apache.shiro.subject.support.SubjectThreadState
+import org.apache.shiro.util.ThreadState
+import org.apache.shiro.web.subject.WebSubject
+import org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse
+import org.springframework.mock.web.MockHttpServletRequest
 import scott.kellie.SecurityService
 import grails.plugin.spock.IntegrationSpec
 import org.apache.shiro.SecurityUtils
@@ -6,6 +13,9 @@ import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.junit.Before
 import scott.kellie.User
 
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
+
 class SecurityServiceIntegrationSpecification extends IntegrationSpec {
 
     GrailsApplication grailsApplication
@@ -13,30 +23,64 @@ class SecurityServiceIntegrationSpecification extends IntegrationSpec {
     SecurityService securityService
 
 
-    @Before
-    void before() {
-//        if(!SecurityUtils.securityManager) {
+//    @Before
+    void setup() {
+        boolean hasSecurityManager
+        try {
+            hasSecurityManager = SecurityUtils.securityManager
+        }catch (UnavailableSecurityManagerException usme) {
+            hasSecurityManager = false
+        }
+        if(!hasSecurityManager) {
 //            SecurityUtils.securityManager = grailsApplication.mainContext.getBean('shiroSecurityManager')
-            SecurityUtils.securityManager = shiroSecurityManager
-//        }
+            SecurityUtils.setSecurityManager(shiroSecurityManager)
+            ServletRequest request = new MockHttpServletRequest() as ServletRequest
+            ServletResponse response = new GrailsMockHttpServletResponse() as ServletResponse
+            Subject subject = WebSubject.Builder(request, response).buildWebSubject();
+            SubjectThreadState sts = new SubjectThreadState(subject)
+            sts.bind()
+
+        }
     }
+//
+//    void "test get current user"() {
+//        when:
+//        def authToken = new UsernamePasswordToken(username, password)
+//
+//        SecurityUtils.subject.login(authToken)
+//        User u = securityService.currentUser
+//
+//        then:
+//        u.username == username
+//
+//        where:
+//        username     | password
+//        'smithscott' | 'smithscott'
+//        'geli'       | 'geli'
+//        'simo'       | 'simo'
+//        'tar'        | 'tar'
+//        'ang'        | 'ang'
+//    }
 
-    void "test get current user"() {
+    void "test api login"() {
         when:
-        def authToken = new UsernamePasswordToken(username, password)
-
-        SecurityUtils.subject.login(authToken)
-        User u = securityService.currentUser
+        boolean result = securityService.apiLogin(username, password)
 
         then:
-        u.username == username
+         loggedIn == result
 
         where:
-        username     | password
-        'smithscott' | 'smithscott'
-        'geli'       | 'geli'
-        'simo'       | 'simo'
-        'tar'        | 'tar'
-        'ang'        | 'ang'
+        username     | password     | loggedIn
+        'smithscott' | 'smithscott' | true
+//        'geli'       | 'geli'       | true
+        'simo'       | 'simo'       | true
+//        'tar'        | 'tar'        | true
+//        'ang'        | 'bad_pwd' | false
+//        'smithscott' | 'bad_pwd' | false
+//        'geli'       | 'bad_pwd' | false
+//        'simo'       | 'bad_pwd' | false
+//        'tar'        | 'bad_pwd' | false
+//        'ang'        | 'bad_pwd' | false
+
     }
 }
