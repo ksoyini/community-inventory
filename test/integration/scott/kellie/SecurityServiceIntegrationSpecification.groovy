@@ -1,9 +1,16 @@
+package scott.kellie
+
 import org.apache.shiro.UnavailableSecurityManagerException
+import org.apache.shiro.config.IniSecurityManagerFactory
 import org.apache.shiro.subject.Subject
 import org.apache.shiro.subject.support.SubjectThreadState
+import org.apache.shiro.util.LifecycleUtils
 import org.apache.shiro.util.ThreadState
 import org.apache.shiro.web.subject.WebSubject
 import org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse
+import org.junit.After
+import org.junit.AfterClass
+import org.junit.BeforeClass
 import org.springframework.mock.web.MockHttpServletRequest
 import scott.kellie.SecurityService
 import grails.plugin.spock.IntegrationSpec
@@ -16,32 +23,38 @@ import scott.kellie.User
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 
-class SecurityServiceIntegrationSpecification extends IntegrationSpec {
+class SecurityServiceIntegrationSpecification extends AbstractShiroIntegrationSpecification {
 
-    GrailsApplication grailsApplication
-    def shiroSecurityManager
+//    GrailsApplication grailsApplication
+//    def shiroSecurityManager
     SecurityService securityService
 
 
-//    @Before
+    @Before
     void setup() {
-        boolean hasSecurityManager
-        try {
-            hasSecurityManager = SecurityUtils.securityManager
-        }catch (UnavailableSecurityManagerException usme) {
-            hasSecurityManager = false
-        }
-        if(!hasSecurityManager) {
-//            SecurityUtils.securityManager = grailsApplication.mainContext.getBean('shiroSecurityManager')
-            SecurityUtils.setSecurityManager(shiroSecurityManager)
-            ServletRequest request = new MockHttpServletRequest() as ServletRequest
-            ServletResponse response = new GrailsMockHttpServletResponse() as ServletResponse
-            Subject subject = WebSubject.Builder(request, response).buildWebSubject();
-            SubjectThreadState sts = new SubjectThreadState(subject)
-            sts.bind()
-
-        }
+        setUpShiro()
+//        boolean hasSecurityManager
+//        try {
+//            hasSecurityManager = SecurityUtils.securityManager
+//        }catch (UnavailableSecurityManagerException usme) {
+//            hasSecurityManager = false
+//        }
+//        if(!hasSecurityManager) {
+////            SecurityUtils.securityManager = grailsApplication.mainContext.getBean('shiroSecurityManager')
+//            SecurityUtils.setSecurityManager(shiroSecurityManager)
+//            ServletRequest request = new MockHttpServletRequest() as ServletRequest
+//            ServletResponse response = new GrailsMockHttpServletResponse() as ServletResponse
+//            Subject subject = WebSubject.Builder(request, response).buildWebSubject();
+//            SubjectThreadState sts = new SubjectThreadState(subject)
+//            sts.bind()
+//
+//        }
     }
+    @After
+    void tearDown() {
+        tearDownShiro()
+    }
+
 //
 //    void "test get current user"() {
 //        when:
