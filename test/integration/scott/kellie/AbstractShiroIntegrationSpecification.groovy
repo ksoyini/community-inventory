@@ -76,7 +76,7 @@ public abstract class AbstractShiroIntegrationSpecification extends IntegrationS
         //1.  Build the Subject instance for the test to run:
 //        Subject subjectUnderTest = new Subject.Builder(getSecurityManager()).buildSubject();
         ServletRequest request = new MockHttpServletRequest() as ServletRequest
-            ServletResponse response = new GrailsMockHttpServletResponse() as ServletResponse
+        ServletResponse response = new GrailsMockHttpServletResponse() as ServletResponse
         Subject subjectUnderTest = new WebSubject.Builder(request, response).buildSubject();
 
         //2. Bind the subject to the current thread:

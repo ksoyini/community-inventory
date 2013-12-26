@@ -8,7 +8,7 @@ import scott.kellie.User
 class PantryInventoryService {
 
     SecurityService securityService
-    //TODO: test
+
     List<PantryInventory> listPantryInventoryForMyFamily() {
         User currentUser = securityService.currentUser
         log.debug('currentUser: ' + currentUser)

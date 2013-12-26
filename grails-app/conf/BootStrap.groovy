@@ -43,6 +43,8 @@ class BootStrap {
             PantryItem yogurt = new PantryItem(name: 'yogurt', itemCategory: ItemCategory.DAIRY).save()
             PantryItem bleach = new PantryItem(name: 'bleach', itemCategory: ItemCategory.CLEANING).save()
             PantryItem cashews = new PantryItem(name: 'cashews', itemCategory: ItemCategory.SNACKS).save()
+            PantryItem gummies = new PantryItem(name: 'gummies', itemCategory: ItemCategory.SNACKS).save()
+            PantryItem chippies = new PantryItem(name: 'chippies', itemCategory: ItemCategory.SNACKS).save()
 //        }
 
        //add sample community
@@ -67,9 +69,11 @@ class BootStrap {
         PantryInventory scottPantryYogurt = new PantryInventory(pantryItem: yogurt, quantity: 4, family: scott).save()
         PantryInventory robinsonPantryYogurt = new PantryInventory(pantryItem: yogurt, quantity: 2, family: rob).save()
         PantryInventory robinsonPantryBleach = new PantryInventory(pantryItem: bleach, quantity: 1, family: rob).save()
+        PantryInventory robinsonPantryGummies = new PantryInventory(pantryItem: gummies, quantity: 10, family: rob).save()
         PantryInventory smithPantryYogurt = new PantryInventory(pantryItem: yogurt, quantity: 3, family: smith).save()
         PantryInventory smithPantryCashews = new PantryInventory(pantryItem: cashews, quantity: 2, family: smith).save()
-
+        PantryInventory smithPantryApples = new PantryInventory(pantryItem: apples, quantity: 5, family: smith).save()
+        PantryInventory smithPantryChippies = new PantryInventory(pantryItem: chippies, quantity: 9, family: smith).save()
     }
     def destroy = {
     }
