@@ -7,15 +7,21 @@ class AuthTests extends BaseTests {
 
         //assert logout is not displayed i.e. we're not logged in
         //TODO:
+        !assertContentContains('Logout')
         login('smithscott')
 
         //if logout is there to click, that means we were successfully logged in
+        assertContentContains('Logout')
         click('Logout')
     }
 
     void testGetCurrentUser() {
         login('smithscott')
-        assertContentContains('You are currently logged in as smithscott')
+        assertContentContains('Welcome smithscott')
+        click('Logout')
+
+        login('geli')
+        assertContentContains('Welcome geli')
         click('Logout')
     }
 
