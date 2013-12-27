@@ -18,7 +18,7 @@ class PantryInventoryServiceIntegrationSpecification extends AbstractShiroIntegr
         tearDownShiro()
     }
 
-    void testListPantryInventoryForMyFamily() {
+    void "test ListPantryInventoryForMyFamily"() {
         when:
         String password = username
         def authToken = new UsernamePasswordToken(username, password)
