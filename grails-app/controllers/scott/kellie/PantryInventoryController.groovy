@@ -3,6 +3,7 @@ package scott.kellie
 import grails.converters.JSON
 import grails.converters.XML
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.http.HttpStatus
 
 class PantryInventoryController {
 
@@ -21,17 +22,43 @@ class PantryInventoryController {
                 [pantryInventoryInstanceList: pantry, pantryInventoryInstanceTotal: pantry.size()]
             }
             json {
-                render pantry as JSON
+                if(pantry) {
+//                    render pantry as JSON
+                    render(contentType: 'text/json') {
+                        pantryInventory = array {
+                            for(pi in pantry) {
+                                pantryInventory item: pi.pantryItem.name, quantity:pi.quantity
+
+                            }
+                        }
+                    }
+                } else {
+                    response.status = HttpStatus.NO_CONTENT.value()
+                    render ''
+                }
             }
             xml {
-                render pantry as XML
+                if(pantry) {
+//                    render pantry as XML
+                    render(contentType: 'text/xml') {
+                        pantryInventory {
+                            for(pi in pantry) {
+                                inventory(item: pi.pantryItem.name, quantity: pi.quantity)
+                            }
+                        }
+                    }
+                } else {
+                    response.status = HttpStatus.NO_CONTENT.value()
+                    render ''
+                }
             }
         }
     }
 
 
     def create() {
-        [pantryInventoryInstance: new PantryInventory(params)]
+//        [pantryInventoryInstance: new PantryInventory(params)]
+        [pantryInventoryInstance: new PantryInventory()]
     }
 
     def save() {
