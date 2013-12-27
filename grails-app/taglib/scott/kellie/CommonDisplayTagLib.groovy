@@ -6,6 +6,6 @@ class CommonDisplayTagLib {
     SecurityService securityService
 
     def currentUserDisplay  = {attrs ->
-        out << "You are currently logged in as $securityService.currentUser.username"
+        out << "Welcome $securityService.currentUser.username !"
     }
 }
