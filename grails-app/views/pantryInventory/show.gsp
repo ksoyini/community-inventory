@@ -27,7 +27,7 @@
 				<li class="fieldcontain">
 					<span id="pantryItem-label" class="property-label"><g:message code="pantryInventory.pantryItem.label" default="Pantry Item" /></span>
 					
-						<span class="property-value" aria-labelledby="pantryItem-label"><g:link controller="pantryItem" action="show" id="${pantryInventoryInstance?.pantryItem?.id}">${pantryInventoryInstance?.pantryItem?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="pantryItem-label">${pantryInventoryInstance?.pantryItem?.name?.encodeAsHTML()}</span>
 					
 				</li>
 				</g:if>
@@ -45,7 +45,7 @@
 				<li class="fieldcontain">
 					<span id="family-label" class="property-label"><g:message code="pantryInventory.family.label" default="Family" /></span>
 					
-						<span class="property-value" aria-labelledby="family-label"><g:link controller="family" action="show" id="${pantryInventoryInstance?.family?.id}">${pantryInventoryInstance?.family?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="family-label">${pantryInventoryInstance?.family?.familyName?.encodeAsHTML()}</span>
 					
 				</li>
 				</g:if>

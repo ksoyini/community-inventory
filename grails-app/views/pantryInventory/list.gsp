@@ -27,20 +27,16 @@
 						<th><g:message code="pantryInventory.pantryItem.label" default="Pantry Item" /></th>
 					
 						<g:sortableColumn property="quantity" title="${message(code: 'pantryInventory.quantity.label', default: 'Quantity')}" />
-					
-						<th><g:message code="pantryInventory.family.label" default="Family" /></th>
-					
+
 					</tr>
 				</thead>
 				<tbody>
 				<g:each in="${pantryInventoryInstanceList}" status="i" var="pantryInventoryInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${pantryInventoryInstance.id}">${fieldValue(bean: pantryInventoryInstance, field: "pantryItem")}</g:link></td>
+						<td><g:link action="show" id="${pantryInventoryInstance.id}">${fieldValue(bean: pantryInventoryInstance, field: "pantryItem.name")}</g:link></td>
 					
 						<td>${fieldValue(bean: pantryInventoryInstance, field: "quantity")}</td>
-					
-						<td>${fieldValue(bean: pantryInventoryInstance, field: "family")}</td>
 					
 					</tr>
 				</g:each>

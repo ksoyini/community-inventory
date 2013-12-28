@@ -31,7 +31,19 @@
 				<g:hiddenField name="id" value="${pantryInventoryInstance?.id}" />
 				<g:hiddenField name="version" value="${pantryInventoryInstance?.version}" />
 				<fieldset class="form">
-					<g:render template="form"/>
+                    <div class="fieldcontain">
+                        <span id="pantryItem-label" class="property-label"><g:message code="pantryInventory.pantryItem.label" default="Pantry Item" /></span>
+
+                        <span class="property-value" aria-labelledby="pantryItem-label">${pantryInventoryInstance?.pantryItem?.name?.encodeAsHTML()}</span>
+
+                    </div>
+                    <div class="fieldcontain ${hasErrors(bean: pantryInventoryInstance, field: 'quantity', 'error')} required">
+                        <label for="quantity">
+                            <g:message code="pantryInventory.quantity.label" default="Quantity" />
+                            <span class="required-indicator">*</span>
+                        </label>
+                        <g:field name="quantity" type="number" min="1" value="${pantryInventoryInstance.quantity}" required=""/>
+                    </div>
 				</fieldset>
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />

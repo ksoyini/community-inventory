@@ -1,10 +1,12 @@
 package scott.kellie
 
+import grails.validation.ValidationErrors
 import grails.web.JSONBuilder
 import groovy.json.JsonBuilder
 import groovy.xml.MarkupBuilder
 import org.junit.*
 import grails.test.mixin.*
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 
 @TestFor(PantryInventoryController)
@@ -125,15 +127,26 @@ class PantryInventoryControllerTests {
     }
 
     void testSave() {
-        controller.save()
+        CreatePantryInventoryCommand cmd = new CreatePantryInventoryCommand()
+        PantryInventory pi = new PantryInventory(pantryItem: cmd.pantryItem, quantity: cmd.quantity)
+        assert !pi.validate()
+        def control = mockFor(PantryInventoryService)
+        control.demand.createPantryInventoryForMyFamily {p,q  -> pi}
+        controller.pantryInventoryService = control.createMock()
+
+        controller.save(cmd)
 
         assert model.pantryInventoryInstance != null
         assert view == '/pantryInventory/create'
 
         response.reset()
 
-        populateValidParams(params)
-        controller.save()
+        cmd = new CreatePantryInventoryCommand(pantryItem:  new PantryItem(), quantity: 1)
+        pi = new PantryInventory(pantryItem: cmd.pantryItem, quantity: cmd.quantity, family: new Family()).save()
+
+        control.demand.createPantryInventoryForMyFamily {p, q -> pi}
+        controller.pantryInventoryService = control.createMock()
+        controller.save(cmd)
 
         assert response.redirectedUrl == '/pantryInventory/show/1'
         assert controller.flash.message != null
@@ -141,105 +154,103 @@ class PantryInventoryControllerTests {
     }
 
     void testShow() {
-        controller.show()
+        def control = mockFor(PantryInventoryService)
+        control.demand.getPantryInventoryForMyFamily {id  -> null}
+        controller.pantryInventoryService = control.createMock()
+
+        controller.show(1L)
 
         assert flash.message != null
         assert response.redirectedUrl == '/pantryInventory/list'
 
-        populateValidParams(params)
-        def pantryInventory = new PantryInventory(params)
+        PantryInventory pi = new PantryInventory()
+        control.demand.getPantryInventoryForMyFamily {id  -> pi}
+        controller.pantryInventoryService = control.createMock()
 
-        assert pantryInventory.save() != null
+        def model = controller.show(2L)
 
-        params.id = pantryInventory.id
-
-        def model = controller.show()
-
-        assert model.pantryInventoryInstance == pantryInventory
+        assert model.pantryInventoryInstance == pi
     }
 
     void testEdit() {
-        controller.edit()
+        def control = mockFor(PantryInventoryService)
+        control.demand.getPantryInventoryForMyFamily {id  -> null}
+        controller.pantryInventoryService = control.createMock()
+
+        controller.edit(1L)
 
         assert flash.message != null
         assert response.redirectedUrl == '/pantryInventory/list'
 
-        populateValidParams(params)
-        def pantryInventory = new PantryInventory(params)
+        PantryInventory pi = new PantryInventory()
+        control.demand.getPantryInventoryForMyFamily {id  -> pi}
+        controller.pantryInventoryService = control.createMock()
 
-        assert pantryInventory.save() != null
+        def model = controller.edit(2L)
 
-        params.id = pantryInventory.id
-
-        def model = controller.edit()
-
-        assert model.pantryInventoryInstance == pantryInventory
+        assert model.pantryInventoryInstance == pi
     }
 
     void testUpdate() {
-        controller.update()
+        EditPantryInventoryCommand cmd = new EditPantryInventoryCommand()
+        PantryInventory pi = new PantryInventory(pantryItem: new PantryItem(), quantity: cmd.quantity, family: new Family())
+        assert !pi.validate()
+        def control = mockFor(PantryInventoryService)
+        control.demand.updatePantryInventoryForMyFamily {id,v,q  -> null}
+        controller.pantryInventoryService = control.createMock()
+
+        controller.update(1L, 0L, cmd)
 
         assert flash.message != null
         assert response.redirectedUrl == '/pantryInventory/list'
 
         response.reset()
 
-        populateValidParams(params)
-        def pantryInventory = new PantryInventory(params)
+        control.demand.updatePantryInventoryForMyFamily {id,v,q  -> pi}
+        controller.pantryInventoryService = control.createMock()
 
-        assert pantryInventory.save() != null
-
-        // test invalid parameters in update
-        params.id = pantryInventory.id
-        //TODO: add invalid values to params object
-
-        controller.update()
+        controller.update(2L, 0L, cmd)
 
         assert view == "/pantryInventory/edit"
         assert model.pantryInventoryInstance != null
+        assert model.pantryInventoryInstance == pi
 
-        pantryInventory.clearErrors()
+        cmd = new EditPantryInventoryCommand(quantity: 2L)
+        pi = new PantryInventory(pantryItem: new PantryItem(), quantity: cmd.quantity, family: new Family()).save()
+        control.demand.updatePantryInventoryForMyFamily {id,v,q  -> pi}
+        controller.pantryInventoryService = control.createMock()
 
-        populateValidParams(params)
-        controller.update()
+        controller.update(3L, 0L, cmd)
 
-        assert response.redirectedUrl == "/pantryInventory/show/$pantryInventory.id"
+        assert response.redirectedUrl == "/pantryInventory/show/$pi.id"
         assert flash.message != null
 
-        //test outdated version number
-        response.reset()
-        pantryInventory.clearErrors()
-
-        populateValidParams(params)
-        params.id = pantryInventory.id
-        params.version = -1
-        controller.update()
-
-        assert view == "/pantryInventory/edit"
-        assert model.pantryInventoryInstance != null
-        assert model.pantryInventoryInstance.errors.getFieldError('version')
-        assert flash.message != null
-    }
+        }
 
     void testDelete() {
-        controller.delete()
+        def control = mockFor(PantryInventoryService)
+        control.demand.deletePantryInventoryForMyFamily {id  -> false}
+        controller.pantryInventoryService = control.createMock()
+
+        controller.delete(1L)
         assert flash.message != null
         assert response.redirectedUrl == '/pantryInventory/list'
 
         response.reset()
 
-        populateValidParams(params)
-        def pantryInventory = new PantryInventory(params)
+        control.demand.deletePantryInventoryForMyFamily {id  -> throw new DataIntegrityViolationException('ex')}
+        controller.pantryInventoryService = control.createMock()
+        controller.delete(2L)
+        assert flash.message != null
+        assert response.redirectedUrl == '/pantryInventory/show/2'
 
-        assert pantryInventory.save() != null
-        assert PantryInventory.count() == 1
+        response.reset()
 
-        params.id = pantryInventory.id
+        control.demand.deletePantryInventoryForMyFamily {id  -> true}
+        controller.pantryInventoryService = control.createMock()
 
-        controller.delete()
-
-        assert PantryInventory.count() == 0
-        assert PantryInventory.get(pantryInventory.id) == null
+        controller.delete(3L)
+        assert flash.message != null
         assert response.redirectedUrl == '/pantryInventory/list'
     }
 }

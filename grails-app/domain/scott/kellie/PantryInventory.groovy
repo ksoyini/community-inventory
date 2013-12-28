@@ -10,6 +10,6 @@ class PantryInventory {
 
     static constraints = {
         pantryItem unique: 'family'
-        quantity min: 0L
+        quantity min: 1L
     }
 }

@@ -1,7 +1,5 @@
 package scott.kellie
 
-import grails.converters.JSON
-import grails.converters.XML
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 
@@ -56,14 +54,20 @@ class PantryInventoryController {
     }
 
 
+    def listCommunity() {
+        List<PantryInventory> pantry = pantryInventoryService.listPantryInventoryForMyCommunity()
+        [pantryInventoryInstanceList: pantry, pantryInventoryInstanceTotal: pantry.size()]
+    }
+
+
     def create() {
 //        [pantryInventoryInstance: new PantryInventory(params)]
         [pantryInventoryInstance: new PantryInventory()]
     }
 
-    def save() {
-        def pantryInventoryInstance = new PantryInventory(params)
-        if (!pantryInventoryInstance.save(flush: true)) {
+    def save(CreatePantryInventoryCommand command) {
+        PantryInventory pantryInventoryInstance = pantryInventoryService.createPantryInventoryForMyFamily(command.pantryItem, command.quantity)
+        if (pantryInventoryInstance.hasErrors()) {
             render(view: "create", model: [pantryInventoryInstance: pantryInventoryInstance])
             return
         }
@@ -73,7 +77,7 @@ class PantryInventoryController {
     }
 
     def show(Long id) {
-        def pantryInventoryInstance = PantryInventory.get(id)
+        PantryInventory pantryInventoryInstance = pantryInventoryService.getPantryInventoryForMyFamily(id)
         if (!pantryInventoryInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'pantryInventory.label', default: 'PantryInventory'), id])
             redirect(action: "list")
@@ -84,7 +88,7 @@ class PantryInventoryController {
     }
 
     def edit(Long id) {
-        def pantryInventoryInstance = PantryInventory.get(id)
+        PantryInventory pantryInventoryInstance = pantryInventoryService.getPantryInventoryForMyFamily(id)
         if (!pantryInventoryInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'pantryInventory.label', default: 'PantryInventory'), id])
             redirect(action: "list")
@@ -94,27 +98,15 @@ class PantryInventoryController {
         [pantryInventoryInstance: pantryInventoryInstance]
     }
 
-    def update(Long id, Long version) {
-        def pantryInventoryInstance = PantryInventory.get(id)
+    def update(Long id, Long version, EditPantryInventoryCommand command) {
+        PantryInventory pantryInventoryInstance = pantryInventoryService.updatePantryInventoryForMyFamily(id, version, command.quantity)
         if (!pantryInventoryInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'pantryInventory.label', default: 'PantryInventory'), id])
             redirect(action: "list")
             return
         }
 
-        if (version != null) {
-            if (pantryInventoryInstance.version > version) {
-                pantryInventoryInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'pantryInventory.label', default: 'PantryInventory')] as Object[],
-                          "Another user has updated this PantryInventory while you were editing")
-                render(view: "edit", model: [pantryInventoryInstance: pantryInventoryInstance])
-                return
-            }
-        }
-
-        pantryInventoryInstance.properties = params
-
-        if (!pantryInventoryInstance.save(flush: true)) {
+        if (pantryInventoryInstance.hasErrors()) {
             render(view: "edit", model: [pantryInventoryInstance: pantryInventoryInstance])
             return
         }
@@ -124,21 +116,37 @@ class PantryInventoryController {
     }
 
     def delete(Long id) {
-        def pantryInventoryInstance = PantryInventory.get(id)
-        if (!pantryInventoryInstance) {
-            flash.message = message(code: 'default.not.found.message', args: [message(code: 'pantryInventory.label', default: 'PantryInventory'), id])
-            redirect(action: "list")
-            return
-        }
-
         try {
-            pantryInventoryInstance.delete(flush: true)
-            flash.message = message(code: 'default.deleted.message', args: [message(code: 'pantryInventory.label', default: 'PantryInventory'), id])
-            redirect(action: "list")
+            boolean foundAndDeleted = pantryInventoryService.deletePantryInventoryForMyFamily(id)
+            if(foundAndDeleted) {
+                flash.message = message(code: 'default.deleted.message', args: [message(code: 'pantryInventory.label', default: 'PantryInventory'), id])
+                redirect(action: "list")
+            } else {
+                flash.message = message(code: 'default.not.found.message', args: [message(code: 'pantryInventory.label', default: 'PantryInventory'), id])
+                redirect(action: "list")
+            }
         }
         catch (DataIntegrityViolationException e) {
             flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'pantryInventory.label', default: 'PantryInventory'), id])
             redirect(action: "show", id: id)
         }
     }
+}
+
+class CreatePantryInventoryCommand {
+    PantryItem pantryItem
+    Long quantity
+
+    static constraints = {
+        quantity min: 1L
+    }
+
+}
+class EditPantryInventoryCommand {
+    Long quantity
+
+    static constraints = {
+        quantity min: 1L
+    }
+
 }

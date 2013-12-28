@@ -43,4 +43,32 @@ class PantryInventoryServiceIntegrationSpecification extends AbstractShiroIntegr
         'tar'        | 4
         'ang'        | 4
     }
+
+    void "test GetPantryInventoryForMyFamily"() {
+        when:
+        String password = username
+        def authToken = new UsernamePasswordToken(username, password)
+
+        SecurityUtils.subject.login(authToken)
+
+        then:
+        SecurityUtils.subject.isAuthenticated()
+
+        when:
+        PantryInventory pantryInventory = pantryInventoryService.getPantryInventoryForMyFamily(pantryInventoryId)
+
+        then:
+        pantryInventory != null
+        pantryInventory.family.id == family.id
+
+        where:
+        username    | pantryInventoryId | family
+        'smithscott' | 1                | Family.findByFamilyName('scott')
+        'robinson'   | 3                | Family.findByFamilyName('robinson')
+        'geli'       | 4                | Family.findByFamilyName('robinson')
+        'simo'       | 6                | Family.findByFamilyName('smith')
+        'tar'        | 7                | Family.findByFamilyName('smith')
+        'ang'        | 8                | Family.findByFamilyName('smith')
+
+    }
 }

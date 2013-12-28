@@ -8,7 +8,7 @@ class APITests extends FunctionalTestCase {
 
 }
         assertStatus(200)
-        String jsonResult ='[]'
+        String jsonResult ='{"pantryInventory":[{"item":"apples","quantity":5},{"item":"yogurt","quantity":4}]}'
         assertContentContains(jsonResult)
     }
 

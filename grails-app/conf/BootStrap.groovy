@@ -15,7 +15,7 @@ class BootStrap {
         Role member = Role.findOrCreateByName("MEMBER_OF_HOUSEHOLD")
 
         // add sample set of users
-//        if(!User.count()) {
+
             //TODO: add salt
             User smithScott  = new User(username: 'smithscott', passwordHash: new Sha256Hash('smithscott').toHex(), roles: [head]).save()
 
@@ -29,23 +29,29 @@ class BootStrap {
             //permissions all users have:
             User.list().each {User u->
                 //can access their own pantry
-                u.addToPermissions('pantryInventory:index')
                 u.addToPermissions('pantryInventory:list')
-                u.addToPermissions('pantryInventory:apiList')
+                u.addToPermissions('pantryInventory:create')
+                u.addToPermissions('pantryInventory:save')
+                u.addToPermissions('pantryInventory:show')
+                u.addToPermissions('pantryInventory:edit')
+                u.addToPermissions('pantryInventory:update')
+                u.addToPermissions('pantryInventory:delete')
                 u.save()
             }
 
-//        }
+        //permissions only heads have
+        smithScott.addToPermissions('pantryInventory:listCommunity').save()
+        robinson.addToPermissions('pantryInventory:listCommunity').save()
+        simo.addToPermissions('pantryInventory:listCommunity').save()
+
 
         //add sample set of pantry items
-//        if(!PantryItem.count()) {
             PantryItem apples = new PantryItem(name: 'apples', itemCategory: ItemCategory.PRODUCE).save()
             PantryItem yogurt = new PantryItem(name: 'yogurt', itemCategory: ItemCategory.DAIRY).save()
             PantryItem bleach = new PantryItem(name: 'bleach', itemCategory: ItemCategory.CLEANING).save()
             PantryItem cashews = new PantryItem(name: 'cashews', itemCategory: ItemCategory.SNACKS).save()
             PantryItem gummies = new PantryItem(name: 'gummies', itemCategory: ItemCategory.SNACKS).save()
             PantryItem chippies = new PantryItem(name: 'chippies', itemCategory: ItemCategory.SNACKS).save()
-//        }
 
        //add sample community
         Community midlo = new Community(name: 'midlo').save()
